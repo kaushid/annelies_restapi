@@ -12,7 +12,7 @@ router.post('/signup', function (req, res, next) {
         .exec()
         .then(function (user) {
             //user is an empty array
-            if (user.length) {               
+            if (user.length) {
                 //409 - conflict - resource already exists
                 return res.status(409).json({
                     message: 'Email already used up'
@@ -29,7 +29,7 @@ router.post('/signup', function (req, res, next) {
                             error: err
                         })
                     } else {
-                        const user = new Users({
+                        const user = new User({
                             _id: new mongoose.Types.ObjectId(),
                             email: req.body.email,
                             name: req.body.name,
@@ -59,4 +59,19 @@ router.post('/signup', function (req, res, next) {
         });
 });
 
+router.delete('/:userId', function (req, res, next) {
+    User.remove({_id : req.parama.userId})
+    .exec()     // return a promise object
+    .then(function(result){
+        res.status(200).json({
+            message : 'User Deleted'
+        });
+    })
+    .catch(function (err) {
+        return res.status(500).json({
+            message: 'Unable to delete the user',
+            error: err
+        })
+    });
+});
 module.exports = router;
