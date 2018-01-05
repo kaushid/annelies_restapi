@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
+const userRoutes = require('./routes/users');
+
 //For Logging out request
 const morgan = require('morgan');
 const mongoose = require('mongoose');
@@ -30,7 +32,7 @@ app.use(morgan('combined'));
 //Defining a filter for products order routes and its corresponding route handler
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
-
+app.use('/user', userRoutes);
 /**
  * Error handler function 
  * =======================
