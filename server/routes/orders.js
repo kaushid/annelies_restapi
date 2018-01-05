@@ -8,7 +8,7 @@ const Product = require('../models/product');
 const Order = require('../models/order');
 
 //Handle incoming GET request for /orders
-router.get('/', function (req, res, next) {
+router.get('/', checkAuth, function (req, res, next) {
     Order.find()
         .select('productId quantity _id')
         //merge up the reference object
@@ -85,7 +85,7 @@ router.post('/createOrder', checkAuth, function (req, res, next) {
         });
 });
 //Handle incoming GET request for /orders/:orderId
-router.get('/:orderId', function (req, res, next) {
+router.get('/:orderId', checkAuth, function (req, res, next) {
     const orderId = req.params.orderId;
     Order.findById(req.params.orderId)
         .select('_id productId quantity')
