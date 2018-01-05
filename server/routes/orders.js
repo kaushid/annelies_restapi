@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const serverConfig = require('../server.config');
+const checkAuth = require('../routeguardMiddleware/authCheck');
 
 const Product = require('../models/product');
 const Order = require('../models/order');
@@ -11,7 +12,7 @@ router.get('/', function (req, res, next) {
     Order.find()
         .select('productId quantity _id')
         //merge up the reference object
-        .populate('productId' , 'name')
+        .populate('productId', 'name')
         .exec()
         .then(function (docs) {
             let response = {};
@@ -46,7 +47,7 @@ router.get('/', function (req, res, next) {
         });
 });
 //Handle incoming POST request for /orders
-router.post('/createOrder', function (req, res, next) {
+router.post('/createOrder', checkAuth, function (req, res, next) {
 
     //Check if Product exist only then create order 
     Product.findById(req.body.productId)
@@ -111,7 +112,7 @@ router.get('/:orderId', function (req, res, next) {
         });
 });
 //Handle incoming DELETE request for /orders/:orderId
-router.delete('/:orderId', function (req, res, next) {
+router.delete('/:orderId', checkAuth, function (req, res, next) {
     const orderId = req.params.orderId;
     Order.remove({ _id: orderId })
         .exec()
